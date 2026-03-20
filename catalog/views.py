@@ -61,7 +61,7 @@ def irrigation_today(request, field_id):
 
     # efektívne hodnoty pre pole
     zr = crop.root_depth_default()
-    p = crop.p
+    p = field.p_effective()
 
     if zr is None:
         return JsonResponse({"error": "Nie je určená hĺbka zakorenenia"}, status=400)
@@ -205,7 +205,7 @@ def irrigation_today(request, field_id):
 
 def fetch_et0_for_field(request, field_id):
     try:
-        days = int(request.GET.get("days", 7))
+        days = int(request.GET.get("days", 14))
         result = store_et0_for_field(field_id, days)
         return JsonResponse(result, json_dumps_params={"ensure_ascii": False})
     except Exception as e:
