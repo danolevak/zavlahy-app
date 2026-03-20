@@ -424,7 +424,7 @@ let allFields = [];
 let activeFieldIndex = -1;
 
 async function renderField(fieldId) {
-    const fields = await fetch("http://127.0.0.1:8000/api/fields/")
+    const fields = await fetch("/api/fields/")
         .then(r => r.json());
 
     const field = fields.find(f => String(f.id) === String(fieldId));
@@ -440,7 +440,7 @@ async function renderField(fieldId) {
     document.getElementById("soil-type-badge").innerText =
         "Pôda: " + (field.soil_type_name || "--");
 
-    const et0 = await fetch(`http://127.0.0.1:8000/api/fields/${field.id}/et0/?days=1`)
+    const et0 = await fetch(`/api/fields/${field.id}/et0/?days=1`)
         .then(r => r.json());
 
     if (et0.data && et0.data.length > 0) {
@@ -450,7 +450,7 @@ async function renderField(fieldId) {
         document.getElementById("et0-today").innerText = "--";
     }
 
-    const irrigation = await fetch(`http://127.0.0.1:8000/api/fields/${field.id}/irrigation/today/`)
+    const irrigation = await fetch(`/api/fields/${field.id}/irrigation/today/`)
         .then(r => r.json());
 
     if (irrigation.doporucana_davka_mm !== undefined) {
@@ -486,7 +486,7 @@ async function renderField(fieldId) {
             ? "Dostatok vody"
             : "Sucho";
 
-    const weather = await fetch(`http://127.0.0.1:8000/api/fields/${field.id}/weather/current/`)
+    const weather = await fetch(`/api/fields/${field.id}/weather/current/`)
     .then(r => r.json());
 
     if (weather) {
@@ -557,7 +557,7 @@ function renderFieldOptions(fields) {
 
 async function loadDashboard() {
 
-    const fields = await fetch("http://127.0.0.1:8000/api/fields/")
+    const fields = await fetch("/api/fields/")
         .then(r => r.json());
 
     allFields = fields;

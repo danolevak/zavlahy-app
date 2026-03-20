@@ -353,7 +353,7 @@ function copyTextToClipboard(text) {
 console.log("SCRIPT JS RUNNING");
 
 async function loadCrops() {
-    const response = await fetch("http://127.0.0.1:8000/api/crops/");
+    const response = await fetch("/api/crops/");
     const crops = await response.json();
 
     const select = document.getElementById("crop-select");
@@ -375,7 +375,7 @@ document.getElementById("crop-select").addEventListener("change", async function
     if (!cropId || !fieldId) return;
 
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/fields/${fieldId}/irrigation/today/?crop_id=${cropId}`);
+        const response = await fetch(`/api/fields/${fieldId}/irrigation/today/?crop_id=${cropId}`);
         const data = await response.json();
 
         document.getElementById("veg-day").innerText =
@@ -413,7 +413,7 @@ async function loadEt0History(fieldId) {
     chartContainer.innerHTML = "Načítavam ET0...";
 
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/fields/${fieldId}/et0/?days=14`);
+        const response = await fetch(`/api/fields/${fieldId}/et0/?days=14`);
         const data = await response.json();
 
         const labels = (data.data || []).map(item => item.date);
@@ -488,7 +488,7 @@ async function loadLatestSoilMoisture(fieldId) {
     box.innerHTML = "Načítavam dáta zo senzora...";
 
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/fields/${fieldId}/soil-moisture/latest/`);
+        const response = await fetch(`/api/fields/${fieldId}/soil-moisture/latest/`);
         const data = await response.json();
 
         if (!data.has_data) {
