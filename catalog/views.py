@@ -134,13 +134,26 @@ def irrigation_today(request, field_id):
         if dr_sensor > taw:
             dr_sensor = taw
 
-        result = calculate_irrigation(
-            dr_yesterday=dr_sensor,
-            etc=Decimal("0"),
-            rain=Decimal("0"),
-            taw=taw,
-            raw=raw,
-        )
+        current_deficit = dr_sensor
+        irrigate = current_deficit > raw
+        recommended_dose = Decimal("0")
+
+        if irrigate:
+            recommended_dose = current_deficit - raw
+
+        sprava = "Odporúčanie: nezavlažovať."
+        if irrigate:
+            sprava = f"Odporúčanie: zavlažovať. Dávka ~{recommended_dose:.2f} mm (≈{recommended_dose:.2f} l/m²)."
+
+        result = {
+            "Zavlazovat": irrigate,
+            "Odporucana_davka_mm": recommended_dose,
+            "Odporucana_davka_l_na_m2": recommended_dose,
+            "Aktualny_vodny_deficit_mm": current_deficit,
+            "Hranica_bez_stresu_mm": raw,
+            "Zasoba_dostupnej_vody_v_korenoch_mm": taw,
+            "Sprava": sprava,
+        }
 
         sensor_adjustment_note = (
             f"Výpočet bol korigovaný podľa senzora. "
