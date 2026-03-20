@@ -3,14 +3,13 @@ from datetime import date, timedelta, datetime
 from catalog.models import Field, ET0Daily
 import requests
 
-def get_et0(latitude, longitude, days = 7):
-    
+def get_et0(latitude, longitude, days=14):
     end_date = date.today()
-    start_date = end_date - timedelta(days = days-1)
-    
-    url="https://api.open-meteo.com/v1/forecast"
+    start_date = end_date - timedelta(days=days - 1)
+
+    url = "https://api.open-meteo.com/v1/forecast"
     params = {
-        "latitude":f"{latitude}",
+        "latitude": f"{latitude}",
         "longitude": f"{longitude}",
         "daily": "et0_fao_evapotranspiration,precipitation_sum",
         "timezone": "UTC",
@@ -21,10 +20,12 @@ def get_et0(latitude, longitude, days = 7):
 
     r = requests.get(url, params=params, timeout=10)
     print("FINAL URL:", r.url)
+
     if not r.ok:
         print("STATUS:", r.status_code)
         print("RESPONSE:", r.text)
         r.raise_for_status()
+
     data = r.json()
 
     try:
@@ -39,8 +40,18 @@ def get_et0(latitude, longitude, days = 7):
         for d, e, r in zip(dates, et0_values, rain_values)
     ]
     
-def store_et0_for_field(field_id, days = 7):
-    field = Field.objects.get(id = field_id)
+def store_et0_for_field(field_id, fallback_days=14):
+    field = Field.objects.get(id=field_id)
+    today = date.today()
+
+    if field.sowing_date:
+        days = (today - field.sowing_date).days + 1
+        if days < 1:
+            days = 1
+        from_sowing = True
+    else:
+        days = fallback_days
+        from_sowing = False
 
     et0_list = get_et0(field.latitude, field.longitude, days)
 
@@ -53,32 +64,52 @@ def store_et0_for_field(field_id, days = 7):
         rain_value = item.get("rain", 0)
 
         obj, created = ET0Daily.objects.update_or_create(
-        field=field,
-        date=d,
-        defaults={
-            "et0_mm": et0_value,
-            "rain_mm": rain_value,
-            "source": "open-meteo",
-        }
-    )
+            field=field,
+            date=d,
+            defaults={
+                "et0_mm": et0_value,
+                "rain_mm": rain_value,
+                "source": "open-meteo",
+            }
+        )
 
         if created:
             saved += 1
         else:
             updated += 1
-    cutoff = date.today() - timedelta(days=13)
 
-    ET0Daily.objects.filter(
-        field_id=field_id,
-        date__lt=cutoff
-    ).delete()
-    return {"saved": saved, "updated": updated, "count": len(et0_list)}
+    if not from_sowing:
+        cutoff = today - timedelta(days=fallback_days - 1)
+        ET0Daily.objects.filter(
+            field=field,
+            date__lt=cutoff
+        ).delete()
+
+    return {
+        "saved": saved,
+        "updated": updated,
+        "count": len(et0_list),
+        "days_used": days,
+        "from_sowing": from_sowing,
+        "sowing_date": field.sowing_date.isoformat() if field.sowing_date else None,
+    }
 
 def get_latest_et0_from_db(field_id):
-    row = ET0Daily.objects.filter(field_id = field_id).order_by("-date").first()
+    row = (
+        ET0Daily.objects
+        .filter(field_id=field_id, et0_mm__isnull=False)
+        .order_by("-date")
+        .first()
+    )
+
     if not row:
         return None
-    return row.et0_mm
+
+    return {
+        "date": row.date,
+        "et0": row.et0_mm,
+        "rain": row.rain_mm,
+    }
 
 def get_day_of_season(sowing_date):
     if not sowing_date:

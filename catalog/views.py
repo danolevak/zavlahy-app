@@ -205,8 +205,7 @@ def irrigation_today(request, field_id):
 
 def fetch_et0_for_field(request, field_id):
     try:
-        days = int(request.GET.get("days", 14))
-        result = store_et0_for_field(field_id, days)
+        result = store_et0_for_field(field_id)
         return JsonResponse(result, json_dumps_params={"ensure_ascii": False})
     except Exception as e:
         return JsonResponse(
