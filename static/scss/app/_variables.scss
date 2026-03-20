@@ -1,0 +1,201 @@
+// >>-- 01 Variables css start --<<
+:root {
+
+    --primary: 15, 98, 106;
+    --secondary: 98,98,98;
+    --success: 10, 185, 100;
+    --danger: 225, 78, 90;
+    --warning: 249, 193, 35;
+    --info: 65, 150, 250;
+    --light: 200, 185, 210;
+    --dark: 40, 35, 45;
+    --white: 255, 255, 255;
+
+    --font-color: #082f32;
+    --body-color: #f5fbfb;
+    --bodybg-color: #f6f7fa;
+    --font-light-color: #a0a0b0;
+    --grid_color: rgba(144, 164, 246, 0.21);
+    --border_color: rgba(0, 0, 0, 0.21);
+    --black: 0, 0, 0;
+    --border_color: #ebedf0;
+
+    --bs-dropdown-link-active-color: rgba(var(--primary), 1);
+    --bs-dropdown-link-active-bg: rgba(var(--primary), 0.2);
+
+
+
+    @mixin btn_css($name, $color) {
+        .btn-#{$name}{
+            --bs-btn-disabled-bg: rgba(var(--#{$color}), 0.8);
+            --bs-btn-disabled-border-color: rgba(var(--#{$color}), 0.8);
+        }
+        .btn-outline-#{$name}{
+            --bs-btn-color: rgba(var(--#{$color}), 1);
+            --bs-btn-border-color: rgba(var(--#{$color}), 1);
+            --bs-btn-hover-bg: rgba(var(--#{$color}), 1);
+            --bs-btn-hover-border-color: rgba(var(--#{$color}), 1);
+            --bs-btn-active-bg: rgba(var(--#{$color}), 1);
+            --bs-btn-active-border-color: rgba(var(--#{$color}), 1);
+            --bs-btn-disabled-color: rgba(var(--#{$color}), 1);
+            --bs-btn-disabled-border-color: rgba(var(--#{$color}), 1);
+        }
+    }
+
+    // Social media colors
+    --facebook : 59, 89, 152;
+    --twitter : 85, 172, 238;
+    --pinterest : 189, 8, 28;
+    --linkedin : 0, 119, 181;
+    --reddit : 255, 69, 0;
+    --whatsapp : 67, 216, 84;
+    --gmail : 234, 67, 53;
+    --telegram : 0, 64, 93;
+    --youtube : 205, 32, 31;
+    --vimeo : 26, 183, 234;
+    --behance : 23, 105, 255;
+    --github : 0, 64, 93;
+    --skype : 0, 175, 240;
+    --snapchat : 255, 250, 55;
+
+    // --box-shadow: 0 0.20rem 2rem  var(--light-gray);
+    --box-shadow: 0 .1rem 0.5rem 0 rgba(var(--dark),.10);
+    --hover-shadow: 0 0.5rem 2rem  var(--light-gray);
+    --app-transition: all 0.3s ease;
+    --light-gray: #f4f7f8;
+    --p-line-height: 1.6;
+    --link-color: var(--primary-color);
+    --tabler-icons : tabler-icons;
+
+
+    //Typography
+    --font-size: 14px;
+    --p-font-size: 14px;
+    --h1-font-size :  2.5rem;
+    --h2-font-size : 2rem;
+    --h3-font-size : 1.75rem;
+    --h4-font-size : 1.25rem;
+    --h5-font-size : 1.125rem;
+    --h6-font-size : 1rem;
+    --btn-font-size : 15px;
+    --app-border-radius: 0.6rem;
+    --bs-border-radius: 0.6rem;
+    --bs-accordion-inner-border-radius: 0.6rem;
+
+    --semi-nav: 5rem;
+    --sidebar-width: 18rem;
+    --font-rubik : "Rubik", serif;
+}
+.default{
+    --primary: 15, 98, 106;
+    --secondary:  98,98,98;
+}
+.gold{
+    --primary: 98, 78, 136;
+    --secondary: 62, 63, 91;
+}
+.warm{
+    --primary: 111, 78, 55;
+    --secondary: 166, 123, 91;
+}
+.happy{
+    --primary: 61, 141, 122;
+    --secondary: 61, 61, 61;
+}
+.nature{
+    --primary: 19, 62, 135;
+    --secondary:  24, 59, 78;
+}
+.cold{
+    --primary: 3, 4, 94;
+    --secondary: 96, 114, 116;
+}
+.hot{
+    --primary: 61, 3, 1;
+    --secondary: 50, 44, 43;
+}
+
+
+
+nav.dark-sidebar,body.dark {
+    --white:34, 37, 44;
+    --black: #DCE2F0;
+    --bodybg-color: #181820;
+    --bs-body-bg: #24272d;
+    --font-color: #fff;
+    --box-shadow: 0 0.2rem 1rem #181820;
+    --hover-shadow: 0 0.2rem 2rem #181820;
+    --light-gray: #24272d;
+     --light: 71, 71, 96;
+    --dark:  234, 234, 236;
+    --secondary: 185 ,179, 166;
+
+    --link-color: #eaeaec;
+    --border_color: #474a56;
+    --bs-border-color: #474a56;
+    --bs-card-border-color: #5B5E69;
+    --bs-form-control-bg: #24272d;
+    --bs-body-color: #ffffff;
+    --bs-secondary-color:#eaeaec;
+    --bs-list-group-color:#eaeaec;
+    --bs-body-color-rgb:#eaeaec;
+    --bs-text-opacity: 0;
+    --bs-card-color:#eaeaec;
+    --bs-tertiary-bg: #242425;
+    .default {
+        --secondary: 185 ,179, 166;
+    }
+
+    .disabled>.page-link, .page-link.disabled {
+        color:#eaeaec;
+        background-color: #333644;
+        border-color: #474a56;
+    }
+
+}
+body{
+    &[text='small-text']{
+        --font-size: 13px;
+        --p-font-size: 13px;
+        --h1-font-size :  2rem;
+        --h2-font-size : 1.75rem;
+        --h3-font-size : 1.25rem;
+        --h4-font-size : 1.125rem;
+        --h5-font-size : 1rem;
+        --h6-font-size : 15px;
+        --btn-font-size : 13px;
+    }
+    &[text='medium-text']{
+        --font-size: 15px;
+        --p-font-size: 15px;
+        --h1-font-size : 2.9rem;
+        --h2-font-size : 2.25rem;
+        --h3-font-size : 1.95rem;
+        --h4-font-size : 1.7rem;
+        --h5-font-size : 1.35rem;
+        --h6-font-size : 1.2rem;
+        --btn-font-size : 16px;
+    }
+    &[text='large-text']{
+        --font-size: 16px;
+        --p-font-size: 16px;
+        --h1-font-size :  2.75rem;
+        --h2-font-size : 2.5rem;
+        --h3-font-size : 2rem;
+        --h4-font-size : 1.75rem;
+        --h5-font-size : 1.25rem;
+        --h6-font-size : 1.125rem;
+        --btn-font-size : 17px;
+    }
+}
+
+
+body.dark{
+    .tooltip-inner {
+        background-color: var(--bs-tooltip-bg);
+        color: #ffffff !important;
+    }
+}
+
+
+// >>-- 01 Variables css start --<<

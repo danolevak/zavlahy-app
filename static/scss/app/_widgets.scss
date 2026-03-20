@@ -1,0 +1,46 @@
+// >>-- 95 Widgets css start --<<
+
+@media screen and (max-width: 1560px) and (min-width: 1400px) {
+  .widget-container {
+    .service-trial-card {
+      .card-body {
+        .service-img-box {
+          height: 120px;
+          img {
+            opacity: 0.2;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1399px) and (min-width: 991px){
+  .widget-container {
+    .service-trial-card {
+      .card-body {
+        .service-img-box {
+          margin-top: 0 !important;
+          height: 175px;
+          + .mt-3 {
+            margin-top: 2rem !important;
+          }
+        }
+        .txt-ellipsis-2 {
+          margin-top: 0.5rem !important;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 575px) {
+
+  .project-data-container{
+    .row {
+      --bs-gutter-y: 1.2rem;
+    }
+  }
+}
+
+// >>-- 95 Widgets css end --<<

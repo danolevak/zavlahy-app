@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Multipurpose, super flexible, powerful, clean modern responsive bootstrap 5 admin template"
+          name="description">
+    <meta content="admin template, ki-admin admin template, dashboard template, flat admin template, responsive admin template, web app"
+          name="keywords">
+    <meta content="la-themes" name="author">
+    <meta name="google" content="notranslate">
+    <link href="/static/images/logo/favicon.png" rel="icon" type="image/x-icon">
+    <link href="/static/images/logo/favicon.png" rel="shortcut icon" type="image/x-icon">
+    <title>Ecommerce Dashboard | ki-admin - Premium Admin Template</title>
+
+    <!-- Animation css -->
+    <link href="/static/vendor/animation/animate.min.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+          rel="stylesheet">
+
+    <!--flag Icon css-->
+    <link href="/static/vendor/flag-icons-master/flag-icon.css" rel="stylesheet" type="text/css">
+
+    <!-- tabler icons-->
+    <link href="/static/vendor/tabler-icons/tabler-icons.css" rel="stylesheet" type="text/css">
+
+    <!-- apexcharts css-->
+    <link href="/static/vendor/apexcharts/apexcharts.css" rel="stylesheet" type="text/css">
+
+    <!-- glight css -->
+    <link href="/static/vendor/glightbox/glightbox.min.css" rel="stylesheet">
+
+    <!-- Bootstrap css-->
+    <link href="/static/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <!-- simplebar css-->
+    <link href="/static/vendor/simplebar/simplebar.css" rel="stylesheet" type="text/css">
+
+    <!-- App css-->
+    <link href="/static/css/style.css" rel="stylesheet" type="text/css">
+
+    <!-- Responsive css-->
+    <link href="/static/css/responsive.css" rel="stylesheet" type="text/css">
+
+    <style>
+    .app-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    main {
+        width: 100%;
+        max-width: none !important;
+        margin: 0 !important;
+        padding-top:0px !important;
+    }
+
+    .row.mb-4{
+        margin-bottom:15px !important;
+    }
+
+    .eshop-cards,
+    .eshop-icon-box,
+    .card {
+        cursor: default !important;
+    }
+</style>
+
+</head>
+
+<body>
+<div class="app-wrapper">
+
+    <div class="loader-wrapper">
+        <div class="loader_24"></div>
+    </div>
+    
+    <!-- Menu Navigation ends -->
+
+    <div class="app-content">
+        <div class="">
+
+            <!-- Header Section starts -->
+            
+            <!-- Header Section ends -->
+
+            <!-- Body main section starts -->
+            <main>
+                <div class="col-md-4">
+                    <label for="field-search" class="form-label fw-semibold">
+                        <i class="ph ph-magnifying-glass me-1"></i>
+                        Vyhľadaj pole
+                    </label>
+                    <input
+                        type="text"
+                        id="field-search"
+                        class="form-control mb-2"
+                        placeholder="Začni písať názov poľa..."
+                    >
+                    <div id="field-results" class="list-group mt-2"></div>
+
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-5">
+                        <div class="card">
+                            <div class="card-body py-3">
+                                <div class="d-flex align-items-center gap-4 flex-wrap">
+                                    <span id="weather-icon">⛅</span>
+
+                                    <span>📅</span>
+                                    <span id="weather-date">--</span>
+
+                                    <span>🌡</span>
+                                    <span id="weather-temp">-- °C</span>
+
+                                    <span>💨</span>
+                                    <span id="weather-wind">-- m/s</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid">
+                    <div class="row">
+
+                        <div class="col-6 col-md-3 col-lg-6">
+                            <div class="card">
+                                <span class="bg-primary h-50 w-50 d-flex-center rounded-circle m-auto eshop-icon-box">
+                                    <i class="ph ph-map-pin f-s-24"></i>
+                                </span>
+                                <div class="card-body eshop-cards">
+                                    <h3 class="text-primary mb-0" id="field-name-card">--</h3>
+                                    <p class="mg-b-35 f-w-600 text-dark-800">Vybrané pole</p>
+                                    <span class="badge bg-light-primary" id="field-latlon">--</span>
+                                    <span class="badge bg-light-primary ms-2" id="soil-type-badge">Pôda: --</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-3 col-lg-6">
+                            <div class="card">
+                                <span class="bg-danger h-50 w-50 d-flex-center rounded-circle m-auto eshop-icon-box">
+                                    <i class="ph ph-leaf f-s-24"></i>
+                                </span>
+                                <div class="card-body eshop-cards">
+                                    <h3 class="text-danger mb-0" id="crop-name">--</h3>
+                                    <p class="mg-b-35 f-w-600 text-dark-800">Plodina</p>
+                                    <span class="badge bg-light-danger">Aktuálne pole</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-3 col-lg-6">
+                            <div class="card">
+                                <span class="bg-warning h-50 w-50 d-flex-center rounded-circle m-auto eshop-icon-box">
+                                    <i class="ph ph-cloud-sun f-s-24"></i>
+                                </span>
+                                <div class="card-body eshop-cards">
+                                    <h3 class="text-warning mb-0" id="et0-today">--</h3>
+                                    <p class="mg-b-35 f-w-600 text-dark-800">ET0 dnes</p>
+                                    <span class="badge bg-light-dark">mm/deň</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-3 col-lg-6">
+                            <div class="card">
+                                <span class="bg-success h-50 w-50 d-flex-center rounded-circle m-auto eshop-icon-box">
+                                    <i class="ph ph-drop f-s-24"></i>
+                                </span>
+                                <div class="card-body eshop-cards">
+                                    <h3 class="text-success mb-0" id="irrigation-dose-card">--</h3>
+                                    <p class="mg-b-35 f-w-600 text-dark-800">Odporúčaná závlaha</p>
+                                    <span class="badge bg-light-success">mm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="mb-4">Výber plodiny a výpočet</h4>
+
+                                <ul class="nav nav-tabs mb-4" id="dashboardTabs">
+                                    <li class="nav-item">
+                                        <button class="nav-link active d-flex align-items-center gap-2"
+                                            data-bs-toggle="tab"
+                                            data-bs-target="#overview-pane">
+                                            <i class="ph ph-calculator"></i>
+                                            <span>Výpočet</span>
+
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link d-flex align-items-center gap-2"
+                                            data-bs-toggle="tab"
+                                            data-bs-target="#sensors-pane">
+                                            <i class="ph ph-broadcast"></i>
+                                            <span>Senzory</span>
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+
+                                    <div class="tab-pane fade show active" id="overview-pane">
+                                        <div class="row g-4">
+                                            <div class="col-md-6">
+                                                <label for="crop-select" class="form-label fw-semibold d-flex align-items-center gap-2">
+                                                    <i class="ph ph-leaf"></i>
+                                                    <span>Plodina</span>
+                                                </label>
+                                                <select id="crop-select" class="form-select">
+                                                    <option value="">-- vyber plodinu --</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold d-flex align-items-center gap-2">
+                                                    <i class="ph ph-calendar"></i>
+                                                    <span>Deň vegetácie</span>
+                                                </label>
+                                                <div class="form-control bg-light" id="veg-day">--</div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="border rounded p-3">
+                                                    <div class="text-muted">Koeficient plodiny (Kc)</div>
+                                                    <div class="fs-4 fw-bold" id="kc-value">--</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="border rounded p-3">
+                                                    <div class="text-muted">ETc</div>
+                                                    <div class="fs-4 fw-bold" id="etc-value">--</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="border rounded p-3">
+                                                    <div class="text-muted">Odporúčanie</div>
+                                                    <div class="fs-5 fw-bold" id="irrigation-status">--</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-4">
+                                            <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+
+                                                        <h4 class="mb-3">Detail závlahy</h4>
+
+                                                        <p><strong>Stav pôdy:</strong> <span id="soil-state">--</span></p>
+
+                                                        <p><strong>Zavlažovať:</strong> <span id="irrigate-yesno">--</span></p>
+
+                                                        <p><strong>Odporúčaná dávka vody:</strong> <span id="dose-mm">--</span> mm</p>
+
+                                                        <p><strong>Aktuálny deficit vody v pôde:</strong> <span id="deficit-mm">--</span> mm</p>
+
+                                                        <p><strong>Dnešné zrážky:</strong> <span id="rain-mm">--</span> mm</p>
+
+                                                        <p><strong>Zásoba vody v pôde (TAW):</strong> <span id="taw-mm">--</span> mm</p>
+
+                                                        <p><strong>Limit pre začiatok zavlažovania (RAW):</strong> <span id="raw-mm">--</span> mm</p>
+
+                                                        <p><strong>Správa:</strong> <span id="irrigation-message">--</span></p>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-4">
+                                            <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="mb-4 d-flex align-items-center gap-2">
+                                                            <i class="ph ph-chart-line"></i>
+                                                            <span>História ET0 (14 dní)</span>
+                                                        </h4>
+                                                        <div id="et0-history-chart" style="height: 320px;"></div>
+                                                        <div id="et0-history-list" class="d-none"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="sensors-pane">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="d-flex align-items-center gap-2">
+                                                    <i class="ph ph-broadcast"></i>
+                                                    <span>Senzor pôdnej vlhkosti</span>
+                                                </h4>
+                                                <div id="sensor-box">
+                                                    Načítavam dáta zo senzora...
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Body main section ends -->
+
+
+    <!-- tap on top -->
+    <div class="go-top">
+      <span class="progress-value">
+        <i class="ti ti-chevron-up"></i>
+      </span>
+    </div>
+
+    <!-- Footer Section starts-->
+    <footer>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-9 col-12">
+                    <p class="footer-text f-w-600 mb-0">Autor: Daniel Levák</p>
+                </div>
+                <div class="col-md-3">
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section ends-->
+</div>
+
+<!-- modal -->
+
+<div class="modal" data-bs-backdrop="static" id="welcomeCard" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content welcome-card">
+
+            <div class="modal-body p-0">
+                <div>
+                    <img alt="img" class=" img-fluid" src="/static/images/modals/welcome-bg.png" >
+                    <div>
+                        <img src="/static/images/modals/welcome-rocket.png" class="modal-rocket img-fluid" alt="img">
+                    </div>
+                </div>
+                <div class="text-end position-absolute end-0 top-0 p-3">
+                    <i class="ti ti-x fs-5 text-dark f-w-600" data-bs-dismiss="modal"></i>
+                </div>
+                <div class="text-center position-relative welcome-card-content z-1 p-3">
+
+                    <h2 class="f-w-600"> Welcome !👋 </h2>
+                    <h6 class="f-s-15 text-dark f-w-500 mx-0 mx-sm-5"> Start Multipurpose, clean modern responsive bootstrap 5 admin template </h6>
+                    <ul class="modal-features-list">
+                        <li class="btn btn-light-primary flex-fill">Fully Responsive</li>
+                        <li class="btn btn-light-primary flex-fill">Built with bootstrap 5</li>
+                        <li class="btn btn-light-primary flex-fill">scss support</li>
+                        <li class="btn btn-light-primary flex-fill">Light & Dark Mode</li>
+                        <li class="btn btn-light-primary flex-fill">Enjoy Started!</li>
+                    </ul>
+                    <div class="mt-3 mb-4">
+                        <button class="btn btn-primary text-white btn-lg" data-bs-dismiss="modal" type="button">
+                            Get Started <i class="ti ti-chevrons-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal -->
+
+<!--customizer-->
+<div id="customizer"></div>
+
+<!-- latest jquery-->
+<script src="/static/js/jquery-3.6.3.min.js"></script>
+
+<!-- Bootstrap js-->
+<script src="/static/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- Simple bar js-->
+<script src="/static/vendor/simplebar/simplebar.js"></script>
+
+<!-- phosphor js -->
+<script src="/static/vendor/phosphor/phosphor.js"></script>
+
+<!-- Glight js -->
+<script src="/static/vendor/glightbox/glightbox.min.js"></script>
+
+<!-- apexcharts-->
+<script src="/static/vendor/apexcharts/apexcharts.min.js"></script>
+
+<!-- Ecommerce js-->
+<!--<script src="/static/js/ecommerce_dashboard.js"></script> -->
+
+<!-- App js-->
+<script src="/static/js/script.js?v=3"></script>
+
+<script>
+
+let allFields = [];
+let activeFieldIndex = -1;
+
+async function renderField(fieldId) {
+    const fields = await fetch("http://127.0.0.1:8000/api/fields/")
+        .then(r => r.json());
+
+    const field = fields.find(f => String(f.id) === String(fieldId));
+    if (!field) return;
+
+    document.getElementById("field-name-card").innerText = field.name;
+
+    document.getElementById("field-latlon").innerText =
+        field.latitude + ", " + field.longitude;
+
+    document.getElementById("crop-name").innerText =
+        field.crop_name || "--";
+    document.getElementById("soil-type-badge").innerText =
+        "Pôda: " + (field.soil_type_name || "--");
+
+    const et0 = await fetch(`http://127.0.0.1:8000/api/fields/${field.id}/et0/?days=1`)
+        .then(r => r.json());
+
+    if (et0.data && et0.data.length > 0) {
+        document.getElementById("et0-today").innerText =
+            et0.data[0].et0_mm.toFixed(2);
+    } else {
+        document.getElementById("et0-today").innerText = "--";
+    }
+
+    const irrigation = await fetch(`http://127.0.0.1:8000/api/fields/${field.id}/irrigation/today/`)
+        .then(r => r.json());
+
+    if (irrigation.doporucana_davka_mm !== undefined) {
+        document.getElementById("irrigation-dose-card").innerText =
+            irrigation.doporucana_davka_mm.toFixed(2);
+    } else {
+        document.getElementById("irrigation-dose-card").innerText = "--";
+    }
+
+    document.getElementById("irrigate-yesno").innerText =
+    irrigation.zavlazovat ? "Áno" : "Nie";
+
+    document.getElementById("dose-mm").innerText =
+        irrigation.doporucana_davka_mm?.toFixed(2) ?? "0";
+
+    document.getElementById("deficit-mm").innerText =
+        irrigation.vodny_deficit_mm?.toFixed(2) ?? "--";
+
+    document.getElementById("rain-mm").innerText =
+        irrigation.rain_mm ?? "0";
+
+    document.getElementById("taw-mm").innerText =
+        irrigation.taw_mm ?? "--";
+
+    document.getElementById("raw-mm").innerText =
+        irrigation.raw_mm ?? "--";
+
+    document.getElementById("irrigation-message").innerText =
+        irrigation.sprava ?? "--";
+
+    document.getElementById("soil-state").innerText =
+        irrigation.vodny_deficit_mm < irrigation.raw_mm
+            ? "Dostatok vody"
+            : "Sucho";
+
+    const weather = await fetch(`http://127.0.0.1:8000/api/fields/${field.id}/weather/current/`)
+    .then(r => r.json());
+
+    if (weather) {
+
+        const weatherIcons = {
+            0: "☀️",
+            1: "🌤️",
+            2: "⛅",
+            3: "☁️",
+            45: "🌫️",
+            48: "🌫️",
+            51: "🌦️",
+            61: "🌧️",
+            63: "🌧️",
+            65: "🌧️",
+            71: "❄️",
+            80: "🌦️",
+            95: "⛈️"
+        };
+
+        document.getElementById("weather-icon").innerText =
+            weatherIcons[weather.weather_code] || "🌤️";
+
+        document.getElementById("weather-date").innerText =
+            new Date(weather.time).toLocaleDateString("sk-SK");
+
+        document.getElementById("weather-temp").innerText =
+            weather.temperature_c.toFixed(1) + " °C";
+
+        document.getElementById("weather-wind").innerText =
+            weather.wind_m_s.toFixed(1) + " m/s";
+    }
+    console.log("VOLAM ET0 PRE FIELD:", field.id);
+
+    console.log("typeof loadEt0History:", typeof loadEt0History);
+    await loadEt0History(field.id);
+
+    loadLatestSoilMoisture(field.id);
+}
+
+function renderFieldOptions(fields) {
+    const resultsContainer = document.getElementById("field-results");
+    resultsContainer.innerHTML = "";
+
+    fields.forEach((field, index) => {
+        const item = document.createElement("div");
+        item.className = "list-group-item list-group-item-action";
+        item.textContent = field.name;
+        item.dataset.fieldId = field.id;
+        item.dataset.index = index;
+
+        if (index === activeFieldIndex) {
+            item.classList.add("active");
+        }
+
+        item.addEventListener("click", () => {
+            renderField(field.id);
+
+            document.getElementById("field-search").value = "";
+            resultsContainer.innerHTML = "";
+            activeFieldIndex = -1;
+        });
+
+        resultsContainer.appendChild(item);
+    });
+}
+
+
+async function loadDashboard() {
+
+    const fields = await fetch("http://127.0.0.1:8000/api/fields/")
+        .then(r => r.json());
+
+    allFields = fields;
+
+    /*
+    const crops = await fetch("http://127.0.0.1:8000/api/crops/")
+        .then(r => r.json());
+
+    const cropSelect = document.getElementById("crop-select");
+    cropSelect.innerHTML = '<option value="">-- vyber plodinu --</option>';
+
+    crops.forEach(crop => {
+        const option = document.createElement("option");
+        option.value = crop.id;
+        option.textContent = crop.name;
+        cropSelect.appendChild(option);
+    });
+    */
+    
+
+    if (fields.length === 0) return;
+    const fieldSearch = document.getElementById("field-search");
+
+    renderFieldOptions(fields);
+
+    const field = fields[0];
+
+    document.getElementById("field-name-card").innerText = field.name;
+    document.getElementById("field-latlon").innerText =
+        field.latitude + ", " + field.longitude;
+
+    document.getElementById("crop-name").innerText =
+        field.crop_name || "--";
+
+fieldSearch.addEventListener("input", function () {
+    const searchText = this.value.toLowerCase().trim();
+
+    if (!searchText) {
+        activeFieldIndex = 0;
+        renderFieldOptions(allFields.slice(0, 5));
+        return;
+    }   
+
+    const filteredFields = allFields.filter(field =>
+    field.name.toLowerCase().includes(searchText)
+    );
+
+    activeFieldIndex = filteredFields.length > 0 ? 0 : -1;
+    renderFieldOptions(filteredFields);
+});
+
+fieldSearch.addEventListener("keydown", function (e) {
+    const searchText = this.value.toLowerCase().trim();
+
+    const currentFields = !searchText
+        ? allFields.slice(0, 5)
+        : allFields.filter(field =>
+            field.name.toLowerCase().includes(searchText)
+        );
+
+    if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (currentFields.length > 0) {
+            activeFieldIndex = Math.min(activeFieldIndex + 1, currentFields.length - 1);
+            renderFieldOptions(currentFields);
+        }
+    }
+
+    if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (currentFields.length > 0) {
+            activeFieldIndex = Math.max(activeFieldIndex - 1, 0);
+            renderFieldOptions(currentFields);
+        }
+    }
+
+    if (e.key === "Enter") {
+        e.preventDefault();
+        if (currentFields.length > 0 && activeFieldIndex >= 0) {
+            const selectedField = currentFields[activeFieldIndex];
+            renderField(selectedField.id);
+
+            this.value = "";
+            document.getElementById("field-results").innerHTML = "";
+            activeFieldIndex = -1;
+        }
+    }
+});
+
+document.addEventListener("click", function (e) {
+    const searchInput = document.getElementById("field-search");
+    const resultsBox = document.getElementById("field-results");
+
+    const clickedInsideSearch = searchInput.contains(e.target);
+    const clickedInsideResults = resultsBox.contains(e.target);
+
+    if (!clickedInsideSearch && !clickedInsideResults) {
+        resultsBox.innerHTML = "";
+        activeFieldIndex = -1;
+    }
+});
+
+await renderField(fields[0].id);    
+}
+
+loadDashboard();
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+// >>-- 69 Maintenance css start --<<
+.maintenance {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+
+  h1{
+    font-size: calc(28px + (50 - 28) * ((100vw - 300px) / (1920 - 300)));
+    line-height: 1;
+    margin-bottom: 25px;
+  }
+  p{
+    font-size: calc(14px + (18 - 14) * ((100vw - 300px) / (1920 - 300))) ;
+  }
+}
+
+// >>-- 69 Maintenance css end --<<

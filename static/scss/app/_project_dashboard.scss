@@ -1,0 +1,321 @@
+// >>-- 89 Project_dashboard css start --<<
+
+.chart-card-box {
+  margin-top: -10px;
+}
+
+.header-box{
+  padding: 0.75rem 1rem;
+  background-color: rgba(var(--white), 1);
+  border-radius: var(--app-border-radius);
+  box-shadow: var(--box-shadow);
+  border-left: 4px solid rgba(var(--primary), 1);
+  margin: 1rem 0;
+}
+
+.project-status-card{
+  position: relative;
+  padding-top: 2.5rem !important;
+
+  .status-icon{
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  &:hover {
+    i{
+      animation: tada;
+      animation-duration: 1s;
+    }
+  }
+}
+
+.updates-box-slider{
+  &.slick-slider{
+    margin-bottom: 24px;
+    img{
+      height: 180px;
+      object-fit: cover;
+    }
+  }
+  .bg-light-primary{
+    background-image: url("../images/dashboard/project/slider-card.png");
+  }
+}
+
+.project-alert{
+  position: relative;
+  background-color: rgba(var(--primary),.8);
+  color: rgba(var(--dark),1);
+  font-weight: 500;
+
+  &:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--white), 0.8);
+    filter: blur(8px);
+  }
+  .progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(var(--primary), 1);
+    animation: progress 5s linear infinite;
+    z-index: 1;
+  }
+
+  @keyframes progress {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+}
+
+@keyframes circle-rotate-left {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.meeting-call-box{
+  width: 100%;
+  height: 328px;
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(var(--primary),.2);
+  background-image: url("../images/dashboard/project/meeting-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: overlay;
+
+  .meeting-details-box{
+    position: absolute;
+    bottom: 1rem;
+    width: -webkit-fill-available;
+    padding: 0.75rem 1rem;
+    background-color: rgba(var(--white),.6);
+    border: 1px solid rgba(var(--white),.8);
+    backdrop-filter: blur(4px);
+    border-radius: var(--app-border-radius);
+    margin: 0 1rem;
+    box-shadow: var(--box-shadow);
+    z-index: 2;
+  }
+
+  .bg-vector-img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: circle-rotate 60s linear infinite;
+  }
+  .bg-vector-img1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: circle-rotate-left 60s linear infinite;
+  }
+}
+
+.project-profit-card{
+  position: relative;
+  .profit-arrow{
+    position: absolute;
+    right: 0;
+    top: 10px;
+    span{
+      outline: 12px solid var(--bodybg-color);
+      border-radius: 50%;
+      margin-top: -10px;
+    }
+  }
+}
+.profit-card-2{
+  .icon-bg{
+    font-size: 650%;
+    position: absolute;
+    right: -30px;
+    top: 24px;
+    opacity: 0.25;
+  }
+}
+.client-list{
+  li{
+    box-shadow: none;
+    border: 1px solid rgba(var(--primary),.2) !important;
+    border-left: 3px solid rgba(var(--primary), 1) !important;
+    &:first-child{
+      &:before{
+        display: none;
+      }
+    }
+
+  }
+}
+
+.update-tab-content{
+  .form-selectgroup {
+    height: 250px;
+    overflow: auto;
+    .select-item{
+      padding: 0.5rem 0.75rem;
+    }
+  }
+  .no-data{
+    img{
+      width: 200px;
+    }
+  }
+}
+
+// Rtl css
+.rtl{
+  .updated-card{
+    direction: ltr;
+  }
+  .update-tab-content{
+    .ms-3{
+      margin-right: 1rem !important;
+    }
+  }
+  .align-middle{
+    .ps-2{
+      margin-right: 0.5rem !important;
+    }
+  }
+  .box-list, .project-data-container{
+    .ms-2{
+      margin-right: 0.5rem !important;
+    }
+  }
+  .project-profit-card{
+    direction: ltr;
+  }
+}
+
+// box css
+
+.box-layout {
+  .overview-details-box {
+    .card-body {
+      padding: 1rem !important;
+      .flex-column{
+        flex-shrink: 0;
+      }
+      .mt-sm-0{
+        .d-flex{
+          margin-left: 1.5rem;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 1550px) and (min-width: 1400px){
+  .overview-details-box {
+    .card-body {
+      padding: 1rem;
+      .flex-column{
+        flex-shrink: 0;
+      }
+      .mt-sm-0{
+        .d-flex{
+          margin-left: 1rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1440px) and (min-width: 992px) {
+  .box-list{
+    .text-light-success{
+      background-color: transparent !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 1399px) and (min-width: 992px) {
+  .project-data-container {
+    .row{
+      .col-sm-6{
+        width: 100%;
+        &:nth-child(1){
+          ul{
+            li{
+              margin-bottom: 1rem;
+              &:nth-child(n+2){
+                display: none !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .meeting-call-box {
+    width: 100%;
+    height: 316px;
+  }
+}
+
+@media only screen and (max-width: 875px) {
+  .overview-details-box {
+    .card-body {
+      padding: 1rem !important;
+      .flex-column{
+        flex-shrink: 0;
+      }
+      .mt-sm-0{
+        .d-flex{
+          margin-left: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .meeting-call-box {
+    text-align: center;
+
+    .bg-vector-img1,
+    .bg-vector-img{
+      width: 100%;
+    }
+  }
+  .updates-box-slider {
+    &.slick-slider {
+      img{
+        height: 144px;
+      }
+    }
+  }
+
+}
+@media only screen and (max-width: 567px){
+  .meeting-call-box {
+    .meeting-details-box {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+}
+@media only screen and (max-width: 425px){
+  .overview-details-box {
+    .col-6{
+      width: 100% ;
+    }
+  }
+}
+
+// >>-- 89 Project_dashboard css end --<<

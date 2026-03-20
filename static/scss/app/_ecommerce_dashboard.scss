@@ -1,0 +1,780 @@
+@use "sass:map";
+@use 'sass:math';
+@use "reboot";
+
+// >>-- 27 Ecommerce_dashboard css start --<<
+
+@mixin chart_marker_mixin($name, $color) {
+  .marker-#{$name} {
+    outline: 4px solid rgba(#{$color}, 0.2);
+    border-radius: 50px;
+    outline-offset: 2px;
+  }
+}
+
+@each $name, $color in reboot.$colors {
+  @include chart_marker_mixin(""+$name, map.get(reboot.$colors, $name));
+}
+
+@keyframes move {
+  0% {
+    background-position: 0 center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes rotate1 {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.welcome-card {
+  border-radius: 20px;
+  border: 0;
+
+  img {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 16px;
+  }
+  .ti-x {
+    filter: brightness(100);
+  }
+  h2 {
+    letter-spacing: 1px;
+    color: rgba(var(--primary),1);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .modal-rocket{
+    width: 225px;
+    position: absolute;
+    top: -26px;
+    left: 45%;
+    transform: translateX(-45%);
+  }
+  .modal-features-list {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 1rem 0;
+    li {
+      position: relative;
+      padding: 0.5rem;
+      border-radius: var(--app-border-radius);
+      color: rgba(var(--primary),1);
+      font-weight: 500;
+      font-size: 14px;
+      //background: linear-gradient(to bottom, rgba(var(--primary),.4), rgba(var(--white),1));
+      //border: 1px solid rgba(var(--primary),1);
+      //border-bottom: 0;
+    }
+  }
+
+}
+
+
+@keyframes rippleEffect {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--ripple-color), 0.1),
+    0 0 0 20px rgba(var(--ripple-color), 0.1),
+    0 0 0 40px rgba(var(--ripple-color), 0.1),
+    0 0 0 60px rgba(var(--ripple-color), 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 40px rgba(var(--ripple-color), 0.1),
+    0 0 0 60px rgba(var(--ripple-color), 0.1),
+    0 0 0 80px rgba(var(--ripple-color), 0.1),
+    0 0 0 100px rgba(var(--ripple-color), 0);
+  }
+}
+$rippleEffectColors: (
+        primary: var(--primary),
+        secondary: var(--secondary),
+        success: var(--success),
+        danger: var(--danger),
+        warning: var(--warning),
+);
+
+@each $name, $color in $rippleEffectColors {
+  .eshop-icon-box.bg-#{$name} ~ .eshop-cards {
+    --ripple-color: #{$color};
+  }
+}
+
+.eshop-icon-box{
+  cursor: pointer;
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: var(--box-shadow);
+  z-index: 1;
+  &.bg-danger,
+  &.bg-primary {
+    ~ .eshop-cards{
+      .ripple-effect{
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
+
+.eshop-cards{
+  position: relative;
+  padding: 3.5rem 0.75rem 1.5rem 0.75rem !important;
+  text-align: center;
+  transition: all 0.5s;
+  overflow: hidden;
+  user-select: none;
+
+  .ripple-effect {
+    display: block;
+    width: 50px;
+    height: 50px;
+    animation: rippleEffect 2s linear infinite;
+    border-radius: 100%;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translatex(-50%);
+    opacity:0;
+    visibility: hidden;
+    transition: all 4s;
+  }
+
+  &:hover {
+    .eshop-icon-box{
+      i{
+        animation: tada;
+        animation-duration: 1s;
+      }
+    }
+    .ripple-effect {
+      opacity:1;
+      visibility: visible;
+    }
+  }
+}
+
+
+
+.service-trial-card{
+  overflow: hidden;
+  text-align: center;
+  .card-body{
+    padding: 1rem;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(to top, rgba(var(--primary),.4), rgba(var(--primary),.9));
+    h5 {
+      background: linear-gradient(45deg, rgba(var(--warning),1), rgba(var(--white),1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+    }
+
+    .service-img-box {
+      width: 100%;
+      height: 140px;
+      background-image: url("../images/dashboard/ecommerce-dashboard/02.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.4;
+    }
+    &:before{
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 150px;
+      background-image: linear-gradient(#0f626a26 1px, transparent 1px), linear-gradient(to right, #0f626a26 1px, transparent 1px);
+      background-size: 25px 25px;
+      z-index: -1;
+    }
+  }
+
+
+}
+
+
+
+.list-box {
+  li{
+    position: relative;
+    padding:0.75rem 1rem;
+    .box-list-img {
+      position: absolute;
+      left: 0.5rem;
+      top: 1.125rem;
+    }
+  }
+
+}
+
+.list-box,
+.box-list {
+  li{
+    &:first-child {
+      overflow: hidden;
+      &:before{
+        content: '';
+        width: 0;
+        height: 100%;
+        position: absolute;
+        background: linear-gradient(90deg, rgba(var(--primary),.4), rgba(var(--primary),.2));
+        transition: all 0.5s;
+        left: 0;
+        top: 0;
+      }
+    }
+    &:hover{
+      border-left: 3px solid rgba(var(--primary),1);
+      h6{
+        color: rgba(var(--primary),1) !important;
+      }
+      img{
+        animation: swing;
+        animation-duration: 1s;
+      }
+      &:first-child {
+        overflow: hidden;
+        &:before{
+          width: 100%;
+
+        }
+      }
+    }
+  }
+
+}
+
+.box-list{
+  user-select: none;
+  li{
+    position: relative;
+    padding:0.75rem 1rem;
+    background-color: rgba(var(--white),1);
+    border-radius: var(--app-border-radius);
+    box-shadow: var(--box-shadow);
+    border-left: 3px solid transparent;
+    transition: all 1s;
+
+    &:hover{
+      border-left: 3px solid rgba(var(--primary),1);
+      h6{
+        color: rgba(var(--primary),1) !important;
+      }
+      img{
+        animation: swing;
+        animation-duration: 1s;
+      }
+    }
+
+    .box-list-img {
+      position: absolute;
+      left: 0.5rem;
+      top: 1.125rem;
+    }
+    &+{
+      li{
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
+
+
+.top-brand-list{
+  li{
+    background-color: rgba(var(--white),1);
+    border-radius: var(--app-border-radius);
+    box-shadow: var(--box-shadow);
+    //border: 1px solid rgba(var(--primary),.2);
+    border-left: 3px solid transparent;
+    transition: all 1s;
+
+    &:hover{
+      border-left: 3px solid rgba(var(--primary),1);
+      h6{
+        color: rgba(var(--primary),1) !important;
+      }
+      img{
+        animation: swing;
+        animation-duration: 1s;
+      }
+    }
+
+    &+{
+      li{
+        margin-top: 0.938rem;
+      }
+    }
+  }
+}
+
+.products-tags-list{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .selectitem{
+    border: 1px solid rgb(var(--primary), 1) !important;
+    color: rgb(var(--primary), 1);
+  }
+  .select-box{
+    margin: 0 !important;
+  }
+  .select-items {
+    .select-input{
+      &:checked ~ {
+        .select-box {
+          .selectitem{
+            background-color: rgba(var(--primary ), 1);
+            color: rgba(var(--white), 1) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.custom-progress-container {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 5px;
+  .progress-bar {
+    height: 100%;
+    border-radius: 1rem;
+    &:nth-child(1) {
+      width: 40%;
+      background-color: rgba(var(--primary),1);
+    }
+    &:nth-child(2) {
+      width: 15%;
+      background-color: rgba(var(--primary),.8);
+    }
+    &:nth-child(3) {
+      width: 25%;
+      background-color: rgba(var(--primary),.6);
+    }
+    &:nth-child(4) {
+      width: 20%;
+      background-color: rgba(var(--primary),.4);
+    }
+  }
+
+}
+
+.highlight-word {
+  display: inline-block;
+  border: 3px dotted;
+  padding: 2px 12px !important;
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 600;
+  background-color: aliceblue;
+  transform: rotate(7deg);
+  margin-left: 51px;
+  text-shadow: 2px 2px 5px rgba(var(--dangerk), 0.3);
+}
+
+.offer-card-box{
+  position: relative;
+  background-image: url("../images/dashboard/ecommerce-dashboard/kids-offer.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  background-color: rgba(var(--primary),.2);
+
+  h4{
+    text-shadow: 2px 2px 5px rgba(var(--dark),.3);
+    margin-top: 1rem;
+
+  }
+
+  &:before {
+    box-shadow: inset 0px -100px 100px -13px rgb(var(--primary), .8);
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    border-radius: var(--app-border-radius);
+  }
+
+  .offer-card-body {
+    width: 100%;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    z-index: 3;
+  }
+}
+
+
+.glass-effect-box {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgba(var(--white),.6);
+  border: 1px solid rgba(var(--white),.8);
+  backdrop-filter: blur(4px);
+  border-radius: var(--app-border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.shipping-timeline{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+
+  &.app-side-timeline {
+    .side-timeline-section{
+      padding-bottom: 0;
+      .side-timeline-icon{
+        cursor: pointer;
+        &:hover{
+          i {
+            animation: swing;
+            animation-duration: 2s;
+          }
+        }
+      }
+
+      &.right-side{
+        border-left: 0;
+        border-top: 3px solid rgba(var(--secondary),.4);
+        .side-timeline-icon{
+          left: 0;
+          top: -18px;
+          outline: 3px solid rgba(var(--secondary),.2);
+          border-radius: 50%;
+        }
+      }
+      &.complete-step{
+        border-left: 0;
+        border-top: 3px solid rgba(var(--primary),1);
+
+        .side-timeline-icon{
+          outline: 3px solid rgba(var(--primary),.4);
+        }
+      }
+
+      .timeline-content{
+        margin: 30px 15px 0 0 !important;
+        p{
+          -webkit-line-clamp: 1 !important;
+        }
+      }
+
+    }
+  }
+}
+
+.location-container{
+  position: relative;
+  width: 100%;
+  height: 230px;
+  background-image: url("../images/dashboard/ecommerce-dashboard/location-bg.jpg");
+  border-radius: var(--app-border-radius);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  border: 2px solid rgba(var(--primary),.4);
+}
+
+.notifications-list {
+  li{
+    .badge-notification{
+      right: -18px;
+      top: 8px;
+    }
+  }
+}
+
+.cart-side-card {
+  .cart-side-table{
+    tr{
+      td{
+        padding: 0.5rem 0 !important;
+      }
+    }
+  }
+}
+
+.brand-img-box{
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  display: block;
+  border-radius:var(--app-border-radius) ;
+
+  img{
+    transition: transform 0.5s ease-out;
+  }
+  &:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    box-shadow:  inset 0px -56px 87px -13px rgb(var(--dark), 0.8);
+    transition: all 0.3s ease-in-out;;
+  }
+  &:hover {
+    img{
+      transform: scale(1.1);
+    }
+  }
+}
+
+.earning-chart{
+  margin-top: -16px;
+  margin-bottom: -8px;
+}
+
+.ecommerce-product-box{
+  .brand-img-box {
+    img{
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+
+
+// Rtl css
+.rtl {
+  .eshop-cards{
+    i{
+      direction: ltr;
+    }
+  }
+
+  .box-list,
+  .list-box  {
+    li {
+      .box-list-img {
+        left: auto;
+        right: 0.5rem;
+      }
+      .mg-s-45,
+      .ms-5 {
+        margin-left: 0 !important;
+        margin-right: 2.813rem !important;
+      }
+    }
+  }
+
+  .box-list,
+  .list-box{
+    .ps-2{
+      padding-left: 0 !important;
+      padding-right: .5rem !important;
+    }
+    .ms-3 {
+      margin-left: 0 !important;
+      padding-right: 1rem !important;
+    }
+  }
+
+  .shipping-timeline {
+    .side-timeline-section{
+      &.right-side{
+        border-right: 0 !important;
+      }
+    }
+  }
+  .eshop-icon-box{
+    direction: ltr;
+  }
+}
+
+// dark scss
+
+body.dark{
+  .apexcharts-legend-text{
+    color: rgb(var(--dark),1) !important;
+  }
+  .service-trial-card{
+    p{
+      color: rgb(var(--dark),1) !important;
+    }
+  }
+  .offer-card-box{
+    .text-primary{
+      color: rgb(var(--dark),1) !important;
+    }
+  }
+}
+
+// Responsive
+
+
+
+@media only screen and (max-width: 1400px){
+  .service-img-box {
+    height: 155px !important;
+  }
+}
+
+@media screen and (max-width: 1399px){
+  .notifications-list{
+    li{
+      &:last-child{
+        display: none !important;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1399px) and (min-width: 992px) {
+  .order-1-lg{
+    order: 1;
+  }
+  .order-2-lg{
+    order: 2;
+  }
+  .order-3-lg{
+    order: 3;
+  }
+
+  .ecommerce-product-box {
+    h3{
+      font-size: 24px !important;
+    }
+  }
+  .notifications-list {
+
+    li{
+      &+ {
+        li{
+          margin-top: 0.75rem !important;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1440px) and (min-width: 1399px) {
+  .offer-card-body {
+    h5{
+      margin: 0 -18px;
+      font-size: 18px;
+    }
+    .my-3{
+      white-space: nowrap;
+    }
+  }
+}
+
+@media only screen and (max-width: 1400px) and (min-width: 768px) {
+  .order-1-md{
+    order: 1;
+  }
+  .order-3-md{
+    order: 3;
+  }
+}
+
+@media only screen and (max-width: 992px) and (min-width: 768px){
+  .order-1-lg {
+    order: 1;
+  }
+}
+
+
+@media only screen and (max-width: 991px) {
+  .offer-card-box {
+    .offer-card-body {
+      height: 300px;
+    }
+  }
+
+  .products-tags-list {
+    .select-box{
+      .selectitem{
+        font-size: 12px;
+        padding: 0.2rem 0.5rem !important;
+      }
+    }
+  }
+  .service-trial-card {
+    .card-body {
+      .service-img-box {
+        height: 130px;
+      }
+    }
+  }
+  .notifications-list {
+    &.box-list {
+      li {
+        + li{
+          margin-top: 0.75rem;
+        }
+      }
+    }
+  }
+
+}
+
+@media only screen and (max-width: 767px) and (min-width: 567px) {
+  .order-1-sm{
+    order: 1;
+  }
+}
+
+@media screen and (max-width: 567px){
+  .app-side-timeline {
+    &.shipping-timeline{
+      flex-direction: column;
+      .side-timeline-section  {
+        border: 0 !important;
+        .timeline-content{
+          margin: -15px 0px 26px 50px !important;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .welcome-card  {
+    .modal-rocket{
+      width: 140px;
+      position: absolute;
+      top: 0;
+      left: 45%;
+      transform: translateX(-45%);
+    }
+  }
+  .eshop-cards-container{
+    .eshop-cards{
+      padding: 3.5rem 0.5rem 0.75rem !important;
+    }
+  }
+}
+
+// >>-- 27 Ecommerce_dashboard css end --<<
