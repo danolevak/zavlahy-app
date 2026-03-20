@@ -203,11 +203,17 @@ def irrigation_today(request, field_id):
 )
 
 
-@require_http_methods(["GET", "POST"])
 def fetch_et0_for_field(request, field_id):
-    days = int(request.GET.get("days", 7))
-    result = store_et0_for_field(field_id, days)
-    return JsonResponse(result, json_dumps_params={"ensure_ascii": False})
+    try:
+        days = int(request.GET.get("days", 7))
+        result = store_et0_for_field(field_id, days)
+        return JsonResponse(result, json_dumps_params={"ensure_ascii": False})
+    except Exception as e:
+        return JsonResponse(
+            {"error": str(e), "field_id": field_id},
+            status=500,
+            json_dumps_params={"ensure_ascii": False},
+        )
 
 def _to_iso(d):
     if hasattr(d, "isoformat"):
