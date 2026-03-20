@@ -430,6 +430,7 @@ let allFields = [];
 let activeFieldIndex = -1;
 
 async function renderField(fieldId) {
+    currentFieldId = fieldId;
     const fields = await fetch("/api/fields/")
         .then(r => r.json());
 

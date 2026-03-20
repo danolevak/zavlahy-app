@@ -368,14 +368,16 @@ async function loadCrops() {
 
 loadCrops();
 
+let currentFieldId = null;
+
 document.getElementById("crop-select").addEventListener("change", async function () {
 
     const cropId = this.value;
 
-    if (!cropId || !fieldId) return;
+    if (!cropId || !currentFieldId) return;
 
     try {
-        const response = await fetch(`/api/fields/${fieldId}/irrigation/today/?crop_id=${cropId}`);
+        const response = await fetch(`/api/fields/${currentFieldId}/irrigation/today/?crop_id=${cropId}`);
         const data = await response.json();
 
         document.getElementById("veg-day").innerText =
