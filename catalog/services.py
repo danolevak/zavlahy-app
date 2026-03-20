@@ -80,33 +80,6 @@ def get_latest_et0_from_db(field_id):
         return None
     return row.et0_mm
 
-def calculate_irrigation(current_deficit, taw, raw):
-    if current_deficit < 0:
-        current_deficit = Decimal("0")
-
-    if current_deficit > taw:
-        current_deficit = taw
-
-    irrigate = current_deficit > raw
-    inet = Decimal("0")
-
-    if irrigate:
-        inet = current_deficit - raw
-
-    sprava = "Odporúčanie: nezavlažovať."
-    if irrigate:
-        sprava = f"Odporúčanie: zavlažovať. Dávka ~{inet:.2f} mm (≈{inet:.2f} l/m²)."
-
-    return {
-        "Zavlazovat": irrigate,
-        "Odporucana_davka_mm": inet,
-        "Odporucana_davka_l_na_m2": inet,
-        "Aktualny_vodny_deficit_mm": current_deficit,
-        "Hranica_bez_stresu_mm": raw,
-        "Zasoba_dostupnej_vody_v_korenoch_mm": taw,
-        "Sprava": sprava,
-    }
-
 def get_day_of_season(sowing_date):
     if not sowing_date:
         return None
@@ -168,6 +141,7 @@ def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
     for row in et0_rows:
         et0 = Decimal(str(row["et0_mm"] or 0))
         rain = Decimal(str(row["rain_mm"] or 0))
+        effective_rain = rain * Decimal("0.80")
 
         row_date = row["date"]
         if hasattr(row_date, "isoformat"):
@@ -185,8 +159,8 @@ def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
         kc = get_kc_for_day(crop, day_of_season)
         etc = et0 * kc
 
-        # 🔥 HLAVNÁ ROVNICA (kumulatívny deficit)
-        dr = dr + etc - rain
+        # HLAVNÁ ROVNICA (kumulatívny deficit)
+        dr = dr + etc - effective_rain
 
         # orezanie podľa FAO
         if dr < 0:

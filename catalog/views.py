@@ -16,7 +16,6 @@ from .services import (
     get_day_of_season,
     get_kc_for_day,
     calculate_cumulative_depletion,
-    calculate_irrigation,
     convert_raw_to_vwc_percent,
 )
 
