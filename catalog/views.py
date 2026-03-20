@@ -83,17 +83,29 @@ def irrigation_today(request, field_id):
 
     depletion_history = calculate_cumulative_depletion(history_rows, crop, taw, field.sowing_date)
 
-    dr_yesterday = Decimal("0")
-    if len(depletion_history) >= 2:
-         dr_yesterday = Decimal(str(depletion_history[-2]["depletion_mm"]))
+    current_deficit = Decimal("0")
+    if depletion_history:
+        current_deficit = Decimal(str(depletion_history[-1]["depletion_mm"]))
 
-    result = calculate_irrigation(
-        dr_yesterday=dr_yesterday,
-        etc=etc,
-        rain=rain,
-        taw=taw,
-        raw=raw,
-    )
+    irrigate = current_deficit > raw
+    recommended_dose = Decimal("0")
+
+    if irrigate:
+        recommended_dose = current_deficit - raw
+
+    sprava = "Odporúčanie: nezavlažovať."
+    if irrigate:
+        sprava = f"Odporúčanie: zavlažovať. Dávka ~{recommended_dose:.2f} mm (≈{recommended_dose:.2f} l/m²)."
+
+    result = {
+        "Zavlazovat": irrigate,
+        "Odporucana_davka_mm": recommended_dose,
+        "Odporucana_davka_l_na_m2": recommended_dose,
+        "Aktualny_vodny_deficit_mm": current_deficit,
+        "Hranica_bez_stresu_mm": raw,
+        "Zasoba_dostupnej_vody_v_korenoch_mm": taw,
+        "Sprava": sprava,
+    }
 
     latest_soil_measurement = (
         SoilMoistureMeasurement.objects

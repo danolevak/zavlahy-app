@@ -80,20 +80,18 @@ def get_latest_et0_from_db(field_id):
         return None
     return row.et0_mm
 
-def calculate_irrigation(dr_yesterday, etc, rain, taw, raw):
-    dr_today = dr_yesterday + etc - rain
+def calculate_irrigation(current_deficit, taw, raw):
+    if current_deficit < 0:
+        current_deficit = Decimal("0")
 
-    if dr_today < 0:
-        dr_today = Decimal("0")
+    if current_deficit > taw:
+        current_deficit = taw
 
-    if dr_today > taw:
-        dr_today = taw
-
-    irrigate = dr_today >= raw
+    irrigate = current_deficit > raw
     inet = Decimal("0")
 
     if irrigate:
-        inet = dr_today - raw
+        inet = current_deficit - raw
 
     sprava = "Odporúčanie: nezavlažovať."
     if irrigate:
@@ -103,7 +101,7 @@ def calculate_irrigation(dr_yesterday, etc, rain, taw, raw):
         "Zavlazovat": irrigate,
         "Odporucana_davka_mm": inet,
         "Odporucana_davka_l_na_m2": inet,
-        "Aktualny_vodny_deficit_mm": dr_today,
+        "Aktualny_vodny_deficit_mm": current_deficit,
         "Hranica_bez_stresu_mm": raw,
         "Zasoba_dostupnej_vody_v_korenoch_mm": taw,
         "Sprava": sprava,
@@ -164,7 +162,7 @@ def get_kc_for_day(crop, day_of_season):
     return kc_end
 
 def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
-    dr = Decimal("0")
+    dr = Decimal("0")  # deficit na začiatku (po sejbe = 0)
     history = []
 
     for row in et0_rows:
@@ -180,12 +178,17 @@ def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
         if hasattr(row_date_value, "date"):
             row_date_value = row_date_value.date()
 
+        # deň vegetácie
         day_of_season = (row_date_value - sowing_date).days + 1
+
+        # Kc + ETc
         kc = get_kc_for_day(crop, day_of_season)
         etc = et0 * kc
 
+        # 🔥 HLAVNÁ ROVNICA (kumulatívny deficit)
         dr = dr + etc - rain
 
+        # orezanie podľa FAO
         if dr < 0:
             dr = Decimal("0")
 
@@ -193,16 +196,15 @@ def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
             dr = taw
 
         history.append({
-            "date": row_date.isoformat() if hasattr(row_date, "isoformat") else str(row_date),
+            "date": row_date_value.isoformat(),
             "et0_mm": float(et0),
             "rain_mm": float(rain),
             "kc": float(round(kc, 3)),
             "etc_mm": float(round(etc, 3)),
-            "depletion_mm": float(round(dr, 3)),
+            "depletion_mm": float(round(dr, 3)),  # toto je kumulatívny deficit
         })
 
     return history
-
 def convert_raw_to_vwc_percent(sensor, raw_value):
     model = (sensor.model or "").strip().upper()
     raw = Decimal(str(raw_value))
