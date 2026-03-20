@@ -17,6 +17,7 @@ from .services import (
     get_kc_for_day,
     calculate_cumulative_depletion,
     convert_raw_to_vwc_percent,
+    store_et0_for_field
 )
 
 from django.shortcuts import render
