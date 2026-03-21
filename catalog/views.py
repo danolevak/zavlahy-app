@@ -17,7 +17,8 @@ from .services import (
     get_kc_for_day,
     calculate_cumulative_depletion,
     convert_raw_to_vwc_percent,
-    store_et0_for_field
+    store_et0_for_field,
+    calculate_irrigation_for_field,
 )
 
 from django.shortcuts import render
@@ -258,3 +259,12 @@ def latest_soil_moisture(request, field_id):
 
 def dashboard(request):
     return render(request, "index.html")
+
+def irrigation_today(request, field_id):
+    crop_id = request.GET.get("crop_id")
+    result = calculate_irrigation_for_field(field_id, crop_id)
+
+    if "error" in result:
+        return JsonResponse(result, status=400, json_dumps_params={"ensure_ascii": False})
+
+    return JsonResponse(result, json_dumps_params={"ensure_ascii": False})
