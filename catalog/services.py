@@ -223,3 +223,174 @@ def convert_raw_to_vwc_percent(sensor, raw_value):
         return max(Decimal("0"), min(vwc, Decimal("100")))
 
     return None
+
+def calculate_irrigation_for_field(field_id, crop_override_id=None):
+    # načítaj pole
+    try:
+        field = Field.objects.get(id=field_id)
+    except Field.DoesNotExist:
+        return JsonResponse({"error": "Neznáme pole"}, status=404)
+    
+    day_of_season = get_day_of_season(field.sowing_date)
+
+    # crop_id môže prísť z Reactu cez query parameter
+    crop_id = request.GET.get("crop_id")
+
+    if crop_id:
+        try:
+            crop = Crop.objects.get(id=crop_id)
+        except Crop.DoesNotExist:
+            return JsonResponse({"error": "Neznáma plodina"}, status=404)
+    else:
+        if not field.crop_id:
+            return JsonResponse({"error": "Pole nemá priradenú plodinu"}, status=400)
+        crop = field.crop
+
+    # pôda ostáva zatiaľ z poľa
+    if not field.soil_type_id:
+        return JsonResponse({"error": "Pole nemá priradený typ pôdy"}, status=400)
+
+    soil = field.soil_type
+
+    # posledné ET0 z DB
+    row = ET0Daily.objects.filter(field_id=field_id).order_by("-date").first()
+    if not row:
+        return JsonResponse({"error": "Nemám ET0 dáta pre toto pole"}, status=404)
+
+    et0 = Decimal(str(row.et0_mm))
+    kc = get_kc_for_day(crop, day_of_season)
+    etc = et0 * kc
+
+    # efektívne hodnoty pre pole
+    zr = crop.root_depth_default()
+    p = field.p_effective()
+
+    if zr is None:
+        return JsonResponse({"error": "Nie je určená hĺbka zakorenenia"}, status=400)
+
+    if p is None:
+        return JsonResponse({"error": "Nie je určená hodnota p"}, status=400)
+
+    # FAO-56 TAW/RAW
+    taw = (soil.theta_fc_default() - soil.theta_wp_default()) * zr * Decimal("1000")
+    raw = p * taw
+    rain = Decimal(str(row.rain_mm or 0))
+
+    history_rows = (
+        ET0Daily.objects
+        .filter(field_id=field_id, date__gte=field.sowing_date)
+        .order_by("date")
+        .values("date", "et0_mm", "rain_mm")
+    )
+
+    depletion_history = calculate_cumulative_depletion(history_rows, crop, taw, field.sowing_date)
+
+    current_deficit = Decimal("0")
+    if depletion_history:
+        current_deficit = Decimal(str(depletion_history[-1]["depletion_mm"]))
+
+    irrigate = current_deficit > raw
+    recommended_dose = Decimal("0")
+
+    if irrigate:
+        recommended_dose = current_deficit - raw
+
+    sprava = "Odporúčanie: nezavlažovať."
+    if irrigate:
+        sprava = f"Odporúčanie: zavlažovať. Dávka ~{recommended_dose:.2f} mm (≈{recommended_dose:.2f} l/m²)."
+
+    result = {
+        "Zavlazovat": irrigate,
+        "Odporucana_davka_mm": recommended_dose,
+        "Odporucana_davka_l_na_m2": recommended_dose,
+        "Aktualny_vodny_deficit_mm": current_deficit,
+        "Hranica_bez_stresu_mm": raw,
+        "Zasoba_dostupnej_vody_v_korenoch_mm": taw,
+        "Sprava": sprava,
+    }
+
+    latest_soil_measurement = (
+        SoilMoistureMeasurement.objects
+        .filter(sensor__field_id=field_id)
+        .order_by("-measured_at")
+        .first()
+    )
+
+    sensor_adjustment_note = None
+
+    if latest_soil_measurement and latest_soil_measurement.vwc_percent is not None:
+        vwc = Decimal(str(latest_soil_measurement.vwc_percent)) / Decimal("100")
+        theta_fc = soil.theta_fc_default()
+        theta_wp = soil.theta_wp_default()
+
+        if vwc >= theta_fc:
+            dr_sensor = Decimal("0")
+        elif vwc <= theta_wp:
+            dr_sensor = taw
+        else:
+            dr_sensor = (theta_fc - vwc) * zr * Decimal("1000")
+
+        if dr_sensor < 0:
+            dr_sensor = Decimal("0")
+
+        if dr_sensor > taw:
+            dr_sensor = taw
+
+        current_deficit = dr_sensor
+        irrigate = current_deficit > raw
+        recommended_dose = Decimal("0")
+
+        if irrigate:
+            recommended_dose = current_deficit - raw
+
+        sprava = "Odporúčanie: nezavlažovať."
+        if irrigate:
+            sprava = f"Odporúčanie: zavlažovať. Dávka ~{recommended_dose:.2f} mm (≈{recommended_dose:.2f} l/m²)."
+
+        result = {
+            "Zavlazovat": irrigate,
+            "Odporucana_davka_mm": recommended_dose,
+            "Odporucana_davka_l_na_m2": recommended_dose,
+            "Aktualny_vodny_deficit_mm": current_deficit,
+            "Hranica_bez_stresu_mm": raw,
+            "Zasoba_dostupnej_vody_v_korenoch_mm": taw,
+            "Sprava": sprava,
+        }
+
+        sensor_adjustment_note = (
+            f"Výpočet bol korigovaný podľa senzora. "
+            f"Odhadnutý deficit zo senzora: {round(float(dr_sensor), 2)} mm."
+        )
+    
+
+    return {
+        "field_id": field_id,
+        "date": row.date.isoformat(),
+
+        "crop": {
+            "id": crop.id,
+            "name": crop.name,
+            "kc": round(float(kc), 3)
+        },
+        "soil": {
+            "id": soil.id,
+            "name": soil.name
+        },
+
+        "et0_mm": round(float(et0), 3),
+        "etc_mm": round(float(etc), 3),
+        "rain_mm": float(rain),
+        "day_of_season": day_of_season,
+
+        "zr_m": float(zr),
+        "taw_mm": float(taw),
+        "raw_mm": float(raw),
+
+        "zavlazovat": irrigate,
+        "doporucana_davka_mm": float(recommended_dose),
+        "vodny_deficit_mm": round(float(current_deficit), 2),
+
+        "sprava": sprava,
+        "sensor_adjustment_note": sensor_adjustment_note,
+        "sensor_deficit_mm": round(float(dr_sensor), 2) if latest_soil_measurement and latest_soil_measurement.vwc_percent is not None else None,
+    }
