@@ -183,17 +183,17 @@ def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
         if hasattr(row_date_value, "date"):
             row_date_value = row_date_value.date()
 
-        # deň vegetácie
+        # Day of seson
         day_of_season = (row_date_value - sowing_date).days + 1
 
-        # Kc + ETc
+        # Crop evapotranspiration
         kc = get_kc_for_day(crop, day_of_season)
         etc = et0 * kc
 
-        # HLAVNÁ ROVNICA (kumulatívny deficit)
+        # Water balance (deficit)
         dr = dr + etc - effective_rain
 
-        # orezanie podľa FAO
+        # FAO limits
         if dr < 0:
             dr = Decimal("0")
 
@@ -206,7 +206,7 @@ def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
             "rain_mm": float(rain),
             "kc": float(round(kc, 3)),
             "etc_mm": float(round(etc, 3)),
-            "depletion_mm": float(round(dr, 3)),  # toto je kumulatívny deficit
+            "depletion_mm": float(round(dr, 3)),  # Water balance (deficit)
         })
 
     return history

@@ -429,6 +429,11 @@
 let allFields = [];
 let activeFieldIndex = -1;
 
+function showDefaultFieldSuggestions() {
+    activeFieldIndex = 0;
+    renderFieldOptions(allFields.slice(0, 5));
+}
+
 async function renderField(fieldId) {
     currentFieldId = fieldId;
     const fields = await fetch("/api/fields/")
@@ -553,8 +558,9 @@ function renderFieldOptions(fields) {
             renderField(field.id);
 
             document.getElementById("field-search").value = "";
-            activeFieldIndex = 0;
-            renderFieldOptions(allFields.slice(0, 5));
+            setTimeout(() => {
+                showDefaultFieldSuggestions();
+            }, 0);
         });
 
         resultsContainer.appendChild(item);
@@ -616,6 +622,12 @@ fieldSearch.addEventListener("input", function () {
     renderFieldOptions(filteredFields);
 });
 
+fieldSearch.addEventListener("focus", function () {
+    if (!this.value.trim()) {
+        showDefaultFieldSuggestions();
+    }
+});
+
 fieldSearch.addEventListener("keydown", function (e) {
     const searchText = this.value.toLowerCase().trim();
 
@@ -648,8 +660,9 @@ fieldSearch.addEventListener("keydown", function (e) {
             renderField(selectedField.id);
 
             this.value = "";
-            activeFieldIndex = 0;
-            renderFieldOptions(allFields.slice(0, 5));
+            setTimeout(() => {
+                showDefaultFieldSuggestions();
+            }, 0);
         }
     }
 });
