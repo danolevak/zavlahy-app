@@ -553,8 +553,8 @@ function renderFieldOptions(fields) {
             renderField(field.id);
 
             document.getElementById("field-search").value = "";
-            resultsContainer.innerHTML = "";
-            activeFieldIndex = -1;
+            activeFieldIndex = 0;
+            renderFieldOptions(allFields.slice(0, 5));
         });
 
         resultsContainer.appendChild(item);
@@ -648,8 +648,8 @@ fieldSearch.addEventListener("keydown", function (e) {
             renderField(selectedField.id);
 
             this.value = "";
-            document.getElementById("field-results").innerHTML = "";
-            activeFieldIndex = -1;
+            activeFieldIndex = 0;
+            renderFieldOptions(allFields.slice(0, 5));
         }
     }
 });
