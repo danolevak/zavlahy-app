@@ -68,13 +68,11 @@ class Field(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
 
-    # PREPOJENIE NA TABUĽKY
     crop = models.ForeignKey(Crop, on_delete=models.PROTECT, null=True, blank=True)
     soil_type = models.ForeignKey(SoilType, on_delete=models.PROTECT, null=True, blank=True)
 
     sowing_date = models.DateField(null=True, blank=True)
 
-# voliteľné override hodnoty (ak chceš pre konkrétne pole zadať vlastné)
     root_depth_override_m = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     p_override = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
 

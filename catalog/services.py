@@ -165,7 +165,57 @@ def get_kc_for_day(crop, day_of_season):
 
     return kc_end
 
-def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
+def adjust_p_for_etc(p_table, etc):
+    """
+    FAO-56 adjustment:
+    p = p_table + 0.04 * (5 - ETc)
+
+    Obmedzíme do intervalu 0.10 až 0.80.
+    """
+    p_adj = Decimal(str(p_table)) + Decimal("0.04") * (Decimal("5") - Decimal(str(etc)))
+
+    if p_adj < Decimal("0.10"):
+        p_adj = Decimal("0.10")
+
+    if p_adj > Decimal("0.80"):
+        p_adj = Decimal("0.80")
+
+    return p_adj
+
+
+def calculate_ks(dr, taw, raw):
+    """
+    FAO-56 water stress coefficient Ks.
+
+    Ak je deficit <= RAW, stres ešte nenastal -> Ks = 1
+    Inak:
+        Ks = (TAW - Dr) / (TAW - RAW)
+    """
+    dr = Decimal(str(dr))
+    taw = Decimal(str(taw))
+    raw = Decimal(str(raw))
+
+    if taw <= 0:
+        return Decimal("1.0")
+
+    if dr <= raw:
+        return Decimal("1.0")
+
+    denominator = taw - raw
+    if denominator <= 0:
+        return Decimal("1.0")
+
+    ks = (taw - dr) / denominator
+
+    if ks < Decimal("0"):
+        ks = Decimal("0")
+
+    if ks > Decimal("1"):
+        ks = Decimal("1")
+
+    return ks
+
+def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date, p_base):
     dr = Decimal("0")  # deficit na začiatku (po sejbe = 0)
     history = []
 
@@ -183,15 +233,25 @@ def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
         if hasattr(row_date_value, "date"):
             row_date_value = row_date_value.date()
 
-        # Day of seson
+        # Day of season
         day_of_season = (row_date_value - sowing_date).days + 1
 
         # Crop evapotranspiration
         kc = get_kc_for_day(crop, day_of_season)
         etc = et0 * kc
 
+        # FAO-56 adjustment of p and RAW
+        p_adj = adjust_p_for_etc(p_base, etc)
+        raw = p_adj * taw
+
+        # Water stress coefficient
+        ks = calculate_ks(dr, taw, raw)
+
+        # Adjusted crop evapotranspiration
+        etc_adj = ks * etc
+
         # Water balance (deficit)
-        dr = dr + etc - effective_rain
+        dr = dr + etc_adj - effective_rain
 
         # FAO limits
         if dr < 0:
@@ -204,12 +264,18 @@ def calculate_cumulative_depletion(et0_rows, crop, taw, sowing_date):
             "date": row_date_value.isoformat(),
             "et0_mm": float(et0),
             "rain_mm": float(rain),
+            "effective_rain_mm": float(round(effective_rain, 3)),
             "kc": float(round(kc, 3)),
+            "p_adj": float(round(p_adj, 3)),
+            "raw_mm": float(round(raw, 3)),
+            "ks": float(round(ks, 3)),
             "etc_mm": float(round(etc, 3)),
-            "depletion_mm": float(round(dr, 3)),  # Water balance (deficit)
+            "etc_adj_mm": float(round(etc_adj, 3)),
+            "depletion_mm": float(round(dr, 3)),
         })
 
     return history
+
 def convert_raw_to_vwc_percent(sensor, raw_value):
     model = (sensor.model or "").strip().upper()
     raw = Decimal(str(raw_value))
@@ -267,7 +333,8 @@ def calculate_irrigation_for_field(field_id, crop_override_id=None):
         return {"error": "Nie je určená hodnota p"}
 
     taw = (soil.theta_fc_default() - soil.theta_wp_default()) * zr * Decimal("1000")
-    raw = p * taw
+    p_adj_today = adjust_p_for_etc(p, etc)
+    raw = p_adj_today * taw
     rain = Decimal(str(row.rain_mm or 0))
 
     if field.sowing_date:
@@ -277,13 +344,22 @@ def calculate_irrigation_for_field(field_id, crop_override_id=None):
             .order_by("date")
             .values("date", "et0_mm", "rain_mm")
         )
-        depletion_history = calculate_cumulative_depletion(history_rows, crop, taw, field.sowing_date)
+        depletion_history = calculate_cumulative_depletion(
+            history_rows,
+            crop,
+            taw,
+            field.sowing_date,
+            p
+        )
     else:
         depletion_history = []
 
     current_deficit = Decimal("0")
     if depletion_history:
         current_deficit = Decimal(str(depletion_history[-1]["depletion_mm"]))
+
+    ks_today = calculate_ks(current_deficit, taw, raw)
+    etc_adj = ks_today * etc
 
     irrigate = current_deficit > raw
     recommended_dose = Decimal("0")
@@ -324,6 +400,9 @@ def calculate_irrigation_for_field(field_id, crop_override_id=None):
             dr_sensor = taw
 
         current_deficit = dr_sensor
+        ks_today = calculate_ks(current_deficit, taw, raw)
+        etc_adj = ks_today * etc
+
         irrigate = current_deficit > raw
         recommended_dose = Decimal("0")
 
@@ -353,11 +432,15 @@ def calculate_irrigation_for_field(field_id, crop_override_id=None):
         },
         "et0_mm": round(float(et0), 3),
         "etc_mm": round(float(etc), 3),
+        "etc_adj_mm": round(float(etc_adj), 3),
         "rain_mm": float(rain),
         "day_of_season": day_of_season,
         "zr_m": float(zr),
         "taw_mm": float(taw),
         "raw_mm": float(raw),
+        "p_base": round(float(p), 3),
+        "p_adj": round(float(p_adj_today), 3),
+        "ks": round(float(ks_today), 3),
         "zavlazovat": irrigate,
         "doporucana_davka_mm": float(recommended_dose),
         "vodny_deficit_mm": round(float(current_deficit), 2),
