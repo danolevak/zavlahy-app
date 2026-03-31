@@ -18,6 +18,7 @@ from .services import (
     calculate_cumulative_depletion,
     convert_raw_to_vwc_percent,
     store_et0_for_field,
+    store_et0_history_for_chart,
     calculate_irrigation_for_field,
 )
 
@@ -26,6 +27,17 @@ from django.shortcuts import render
 def fetch_et0_for_field(request, field_id):
     try:
         result = store_et0_for_field(field_id)
+        return JsonResponse(result, json_dumps_params={"ensure_ascii": False})
+    except Exception as e:
+        return JsonResponse(
+            {"error": str(e), "field_id": field_id},
+            status=500,
+            json_dumps_params={"ensure_ascii": False},
+        )
+    
+def fetch_et0_chart_history(request, field_id):
+    try:
+        result = store_et0_history_for_chart(field_id, days=30)
         return JsonResponse(result, json_dumps_params={"ensure_ascii": False})
     except Exception as e:
         return JsonResponse(

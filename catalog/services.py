@@ -454,3 +454,39 @@ def calculate_irrigation_for_field(field_id, crop_override_id=None):
             "sensor_name": latest_soil_measurement.sensor.name if latest_soil_measurement else None,
         },
     }
+
+def store_et0_history_for_chart(field_id, days=30):
+    field = Field.objects.get(id=field_id)
+
+    et0_list = get_et0(field.latitude, field.longitude, days)
+
+    saved = 0
+    updated = 0
+
+    for item in et0_list:
+        d = datetime.fromisoformat(item["date"]).date()
+        et0_value = item["et0"]
+        rain_value = item.get("rain", 0)
+
+        obj, created = ET0Daily.objects.update_or_create(
+            field=field,
+            date=d,
+            defaults={
+                "et0_mm": et0_value,
+                "rain_mm": rain_value,
+                "source": "open-meteo",
+            }
+        )
+
+        if created:
+            saved += 1
+        else:
+            updated += 1
+
+    return {
+        "saved": saved,
+        "updated": updated,
+        "count": len(et0_list),
+        "days_used": days,
+        "mode": "chart_history",
+    }
