@@ -498,8 +498,20 @@ async function renderField(fieldId) {
             ? "Dostatok vody"
             : "Sucho";
 
-    const weather = await fetch(`/api/fields/${field.id}/weather/current/`)
-    .then(r => r.json());
+    let weather = null;
+
+    try {
+        const res = await fetch(`/api/fields/${field.id}/weather/current/`);
+
+        if (!res.ok) {
+            const text = await res.text();
+            console.error("Weather API error:", text);
+        } else {
+            weather = await res.json();
+        }
+    } catch (err) {
+        console.error("Fetch error:", err);
+    }
 
     if (weather) {
 

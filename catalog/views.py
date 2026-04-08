@@ -118,28 +118,48 @@ def crops_list(request):
     )
     return JsonResponse(list(rows), safe=False, json_dumps_params={"ensure_ascii": False})
 
-def weather_current (request, field_id):
-    field = Field.objects.get(id = field_id)
+def weather_current(request, field_id):
+    try:
+        field = Field.objects.get(id=field_id)
 
-    url = (
-        "https://api.open-meteo.com/v1/forecast"
-        f"?latitude={field.latitude}&longitude={field.longitude}"
-        "&current=temperature_2m,wind_speed_10m,weather_code"
-        "&timezone=auto"
-    )
+        url = (
+            "https://api.open-meteo.com/v1/forecast"
+            f"?latitude={field.latitude}&longitude={field.longitude}"
+            "&current=temperature_2m,wind_speed_10m,weather_code"
+            "&timezone=auto"
+        )
 
-    r = requests.get(url, timeout=10)
-    r.raise_for_status()
-    j = r.json()
+        r = requests.get(url, timeout=10)
+        r.raise_for_status()
+        j = r.json()
 
-    cur = j.get("current", {})
-    return JsonResponse({
-        "field_id": field_id,
-        "time": cur.get("time"),
-        "temperature_c": cur.get("temperature_2m"),
-        "wind_m_s": cur.get("wind_speed_10m"),
-        "weather_code": cur.get("weather_code"),
-    }, json_dumps_params={"ensure_ascii": False})
+        cur = j.get("current", {})
+        return JsonResponse({
+            "field_id": field_id,
+            "time": cur.get("time"),
+            "temperature_c": cur.get("temperature_2m"),
+            "wind_m_s": cur.get("wind_speed_10m"),
+            "weather_code": cur.get("weather_code"),
+        }, json_dumps_params={"ensure_ascii": False})
+
+    except Field.DoesNotExist:
+        return JsonResponse(
+            {"error": "Pole neexistuje"},
+            status=404,
+            json_dumps_params={"ensure_ascii": False}
+        )
+    except requests.RequestException as e:
+        return JsonResponse(
+            {"error": f"Chyba pri načítaní počasia: {str(e)}"},
+            status=502,
+            json_dumps_params={"ensure_ascii": False}
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"error": str(e)},
+            status=500,
+            json_dumps_params={"ensure_ascii": False}
+        )
 
 @csrf_exempt
 @require_http_methods(["POST"])
