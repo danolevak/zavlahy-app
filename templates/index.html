@@ -436,7 +436,6 @@ function showDefaultFieldSuggestions() {
 
 async function renderField(fieldId) {
     currentFieldId = fieldId;
-    await fetch(`/api/fields/${field.id}/fetch-et0/`);
     const fields = await fetch("/api/fields/")
         .then(r => r.json());
 
@@ -453,6 +452,7 @@ async function renderField(fieldId) {
     document.getElementById("soil-type-badge").innerText =
         "Pôda: " + (field.soil_type_name || "--");
 
+    await fetch(`/api/fields/${field.id}/fetch-et0/`);
     const et0 = await fetch(`/api/fields/${field.id}/et0/?days=1`)
         .then(r => r.json());
 
