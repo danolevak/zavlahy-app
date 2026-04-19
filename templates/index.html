@@ -436,6 +436,7 @@ function showDefaultFieldSuggestions() {
 
 async function renderField(fieldId) {
     currentFieldId = fieldId;
+    await fetch(`/api/fields/${field.id}/fetch-et0/`);
     const fields = await fetch("/api/fields/")
         .then(r => r.json());
 

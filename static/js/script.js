@@ -415,7 +415,6 @@ async function loadEt0History(fieldId) {
     chartContainer.innerHTML = "Načítavam ET0...";
 
     try {
-        await fetch(`/api/fields/${fieldId}/fetch-et0-chart/`);
 
         const response = await fetch(`/api/fields/${fieldId}/et0/?days=30`);
         const data = await response.json();
